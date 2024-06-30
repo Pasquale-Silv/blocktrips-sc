@@ -36,6 +36,18 @@ pub mod blocktrips_sc {
         Ok(())
     }
 
+    // This function is used by the Traveler to put the Trip up for sale
+    pub fn put_up_for_sale(
+        ctx: Context<PutTripUpForSale>,
+        price: f64
+    ) -> Result<()> {
+        msg!("Putting the Trip up for sale...");
+        let trip = &mut ctx.accounts.trip;
+        trip.is_for_sale = true;
+        trip.price = price;
+        Ok(())
+    }
+
     pub fn set_price(
         ctx: Context<UpdatePrice>,
         price: f64
@@ -76,6 +88,15 @@ pub struct UpdatePrice<'info> {
 
 #[derive(Accounts)]
 pub struct BuyTrip<'info> {
+    #[account(mut)]
+    pub trip: Account<'info, Trip>,
+    #[account(mut)]
+    pub initializer: Signer<'info>,
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct PutTripUpForSale<'info> {
     #[account(mut)]
     pub trip: Account<'info, Trip>,
     #[account(mut)]
