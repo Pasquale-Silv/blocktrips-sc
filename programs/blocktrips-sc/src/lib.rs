@@ -23,6 +23,11 @@ pub mod blocktrips_sc {
         trip.is_for_sale = true;
         Ok(())
     }
+
+    // Function to Close/Eliminate the Trip
+    pub fn close(_ctx: Context<CloseTrip>) -> Result<()> {
+        Ok(())
+    }
 }
 
 #[derive(Accounts)]
@@ -36,6 +41,17 @@ pub struct Initialize<'info> {
     )]
     pub trip: Account<'info, Trip>,
     pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct CloseTrip<'info> {
+  #[account(mut)]
+  pub payer: Signer<'info>,
+  #[account(
+  mut,
+  close = payer, // close account and return lamports to payer
+  )]
+  pub trip: Account<'info, Trip>,
 }
 
 #[account]
