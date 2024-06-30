@@ -11,7 +11,7 @@ blocktrips_sc = "Eu6oXy1qR4xBfxNphKzeBMA41tT3EycJRs7wVNCNSnDN"
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
+cluster = "Devnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
