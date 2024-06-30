@@ -6,6 +6,7 @@ declare_id!("Eu6oXy1qR4xBfxNphKzeBMA41tT3EycJRs7wVNCNSnDN");
 pub mod blocktrips_sc {
     use super::*;
 
+    // This function is used by the Accommodation Business to create a Trip for selling it at a specified price
     pub fn initialize(
         ctx: Context<Initialize>,
         accommodation_business: Pubkey,
@@ -19,6 +20,7 @@ pub mod blocktrips_sc {
         trip.date_of_departure = date_of_departure;
         trip.end_date = end_date;
         trip.price = price;
+        trip.is_for_sale = true;
         Ok(())
     }
 }
@@ -29,7 +31,7 @@ pub struct Initialize<'info> {
     pub payer: Signer<'info>,
     #[account(
         init,
-        space = 8 + 4 + 32 + 32 + 1 + 8 + 4 + 8 + 4 + 8,
+        space = 8 + 4 + 32 + 32 + 1 + 8 + 4 + 10 + 4 + 10,
         payer = payer
     )]
     pub trip: Account<'info, Trip>,
@@ -44,6 +46,6 @@ pub struct Trip {
     accommodation_business: Pubkey,
     is_for_sale: bool,
     price: f64,
-    date_of_departure: String,        // YYYYMMDD
-    end_date: String,                 // YYYYMMDD
+    date_of_departure: String,        // YYYY-MM-DD, I.e.: 2024-06-06
+    end_date: String,                 // YYYY-MM-DD
 }
