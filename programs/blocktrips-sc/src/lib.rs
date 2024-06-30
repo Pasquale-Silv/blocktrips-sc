@@ -24,6 +24,16 @@ pub mod blocktrips_sc {
         Ok(())
     }
 
+    pub fn set_price(
+        ctx: Context<UpdatePrice>,
+        price: f64
+    ) -> Result<()> {
+        msg!("Updating the price of the trip...");
+        let trip = &mut ctx.accounts.trip;
+        trip.price = price;
+        Ok(())
+    }
+
     // Function to Close/Eliminate the Trip
     pub fn close(_ctx: Context<CloseTrip>) -> Result<()> {
         Ok(())
@@ -40,6 +50,15 @@ pub struct Initialize<'info> {
         payer = payer
     )]
     pub trip: Account<'info, Trip>,
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct UpdatePrice<'info> {
+    #[account(mut)]
+    pub trip: Account<'info, Trip>,
+    #[account(mut)]
+    pub initializer: Signer<'info>,
     pub system_program: Program<'info, System>,
 }
 
