@@ -24,6 +24,18 @@ pub mod blocktrips_sc {
         Ok(())
     }
 
+    // This function is used by the Traveler to buy the Trip
+    pub fn buy(
+        ctx: Context<BuyTrip>,
+        traveler: Pubkey
+    ) -> Result<()> {
+        msg!("Buying the trip...");
+        let trip = &mut ctx.accounts.trip;
+        trip.traveler = traveler;
+        trip.is_for_sale = false;
+        Ok(())
+    }
+
     pub fn set_price(
         ctx: Context<UpdatePrice>,
         price: f64
@@ -55,6 +67,15 @@ pub struct Initialize<'info> {
 
 #[derive(Accounts)]
 pub struct UpdatePrice<'info> {
+    #[account(mut)]
+    pub trip: Account<'info, Trip>,
+    #[account(mut)]
+    pub initializer: Signer<'info>,
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct BuyTrip<'info> {
     #[account(mut)]
     pub trip: Account<'info, Trip>,
     #[account(mut)]
