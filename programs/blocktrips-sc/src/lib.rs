@@ -111,9 +111,9 @@ pub struct BuyTrip<'info> {
     #[account(mut)]
     pub from: Signer<'info>,
     pub system_program: Program<'info, System>,
-    //from: AccountInfo<'info>,
-    /// CHECK
-    to: AccountInfo<'info>,
+    /// CHECK: This is not dangerous because we don't read or write from this account
+    #[account(mut)]
+    pub to: AccountInfo<'info>,
 }
 
 #[derive(Accounts)]
