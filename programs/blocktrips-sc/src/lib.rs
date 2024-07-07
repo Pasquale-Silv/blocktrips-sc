@@ -27,9 +27,27 @@ pub mod blocktrips_sc {
     // This function is used by the Traveler to buy the Trip
     pub fn buy(
         ctx: Context<BuyTrip>,
-        traveler: Pubkey
+        traveler: Pubkey,
+        price: u64
     ) -> Result<()> {
         msg!("Buying the trip...");
+
+        let ix = anchor_lang::solana_program::system_instruction::transfer(
+            &ctx.accounts.from.key(),
+            &ctx.accounts.to.key(),
+            price,
+        );
+
+        let _ = anchor_lang::solana_program::program::invoke(
+            &ix,
+            &[
+                ctx.accounts.from.to_account_info(),
+                ctx.accounts.to.to_account_info(),
+            ],
+        );
+
+        msg!("SOL sent...");
+
         let trip = &mut ctx.accounts.trip;
         trip.traveler = traveler;
         trip.is_for_sale = false;
@@ -91,8 +109,11 @@ pub struct BuyTrip<'info> {
     #[account(mut)]
     pub trip: Account<'info, Trip>,
     #[account(mut)]
-    pub initializer: Signer<'info>,
+    pub from: Signer<'info>,
     pub system_program: Program<'info, System>,
+    //from: AccountInfo<'info>,
+    /// CHECK
+    to: AccountInfo<'info>,
 }
 
 #[derive(Accounts)]
